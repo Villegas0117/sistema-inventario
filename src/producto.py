@@ -10,5 +10,5 @@ class Producto:
     def mostrar_informacion(self):
         print(f"Código: {self.codigo}")
         print(f"Nombre: {self.nombre}")
-        print(f"Precio: {self.precio}")
+        print(f"Precio: {self.precio + 100}")
         print(f"Existencia: {self.existencia}")
