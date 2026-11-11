@@ -1,0 +1,42 @@
+name: Tests del Sistema de Inventario
+
+# Ejecuta las pruebas en cada push a main y a las ramas de trabajo,
+# en cada Pull Request hacia main y de forma manual.
+on:
+  push:
+    branches:
+      - main
+      - "test/**"
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Ejecutar pruebas (Python)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Configurar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+          else
+            echo "No hay requirements.txt: el proyecto solo usa la biblioteca estándar."
+          fi
+
+      - name: Ejecutar pruebas
+        run: python -m unittest discover -s tests -t . -v
