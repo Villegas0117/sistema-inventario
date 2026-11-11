@@ -1,0 +1,55 @@
+name: Build del Sistema de Inventario
+
+# El workflow se ejecuta en cada push a main y a las ramas de trabajo,
+# en cada Pull Request dirigido a main y también de forma manual.
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# El workflow solo necesita leer el contenido del repositorio.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compilar y verificar (Python)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Configurar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install -r requirements.txt
+          else
+            echo "No hay requirements.txt: el proyecto solo usa la biblioteca estándar."
+          fi
+
+      - name: Verificar sintaxis y compilar
+        run: python -m compileall -q src
+
+      - name: Ejecutar prueba de humo
+        run: |
+          python - <<'PY'
+          from src.producto import Producto
+
+          producto = Producto("A001", "Teclado", 250.0, 10)
+          assert producto.codigo == "A001"
+          assert producto.nombre == "Teclado"
+          assert producto.precio == 250.0
+          assert producto.existencia == 10
+          print("Prueba de humo correcta: el proyecto se construye y funciona.")
+          PY
