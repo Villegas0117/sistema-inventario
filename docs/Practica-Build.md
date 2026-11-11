@@ -126,13 +126,13 @@ Define el job `build`, su nombre visible y la máquina virtual donde se ejecuta.
 ```yaml
     steps:
       - name: Descargar el código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 ```
 Descarga el contenido del repositorio en el runner (sin este paso no hay código que compilar).
 
 ```yaml
       - name: Configurar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 ```
@@ -177,25 +177,45 @@ Verifica que la clase `Producto` se importe y se instancie con los valores esper
 
 ### Bitácora de ejecuciones
 
-| # | Commit | Acción | Resultado esperado | Enlace a la ejecución |
+Pull Request: **#14** — https://github.com/Villegas0117/sistema-inventario/pull/14
+
+| # | Commit | Acción | Resultado | Enlace a la ejecución |
 |---|---|---|---|---|
-| 1 | `PENDIENTE` | Se agrega el workflow | Éxito | `PENDIENTE` |
-| 2 | `PENDIENTE` | Se introduce un error de sintaxis | Fallo | `PENDIENTE` |
-| 3 | `PENDIENTE` | Se corrige el error | Éxito | `PENDIENTE` |
+| 1 | `d48bf42` | Se agrega el workflow | ✅ Éxito | https://github.com/Villegas0117/sistema-inventario/actions/runs/42951710344 |
+| 2 | `f46c5b8` | Se actualizan `checkout` y `setup-python` a v7 | ✅ Éxito | https://github.com/Villegas0117/sistema-inventario/actions/runs/42951823088 |
+| 3 | `d7b2b25` | Se introduce un error de sintaxis | ❌ Fallo | https://github.com/Villegas0117/sistema-inventario/actions/runs/42951908889 |
+| 4 | `62583e3` | Se corrige el error | ✅ Éxito | https://github.com/Villegas0117/sistema-inventario/actions/runs/42951975978 |
+
 
 ### Evidencias (capturas)
 
-Guardar las capturas en `docs/evidencias/` con estos nombres:
+Las capturas están incluidas en `docs/evidencias/`:
 
-1. `01-ejecucion-exitosa.png` — Actions con el workflow en verde.
-2. `02-ejecucion-fallida.png` — ejecución en rojo y log del error de sintaxis.
+1. `01-ejecucion-exitosa.png` — resumen de la ejecución en verde.
+2. `02-ejecucion-fallida.png` — ejecución en rojo con la anotación de error.
 3. `03-ejecucion-corregida.png` — nueva ejecución en verde tras la corrección.
 
-Cómo tomarlas: repositorio → pestaña **Actions** → seleccionar la ejecución → capturar el resumen y, en la ejecución fallida, el paso **Verificar sintaxis y compilar** con el mensaje `SyntaxError`.
+![Ejecución exitosa](evidencias/01-ejecucion-exitosa.png)
+
+![Ejecución fallida](evidencias/02-ejecucion-fallida.png)
+
+![Ejecución corregida](evidencias/03-ejecucion-corregida.png)
+
+> Nota: en un repositorio público, el resumen y la conclusión de cada ejecución son visibles sin iniciar sesión, pero los logs detallados piden autenticarse. Para la entrega puedes añadir una captura extra del log del paso **Verificar sintaxis y compilar** con el `SyntaxError` estando autenticado en GitHub.
 
 ### Error provocado
 
-Se modificó intencionalmente un archivo de `src/` para producir un error de sintaxis. El workflow falló en el paso **Verificar sintaxis y compilar** con un `SyntaxError`, sin llegar a la prueba de humo. Después se revirtió el cambio y la ejecución volvió a finalizar correctamente.
+Se eliminó intencionalmente el `:` de la línea 10 de `src/producto.py`, dejando `def mostrar_informacion(self)`:
+
+```text
+*** Error compiling 'src/producto.py'...
+  File "src/producto.py", line 10
+    def mostrar_informacion(self)
+                                 ^
+SyntaxError: expected ':'
+```
+
+El workflow falló en el paso **Verificar sintaxis y compilar** (commit `d7b2b25`) y se detuvo antes de la prueba de humo. Después se restauró el `:` en el commit `62583e3`; la siguiente ejecución terminó correctamente en verde.
 
 ---
 
