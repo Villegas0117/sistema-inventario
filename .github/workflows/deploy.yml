@@ -1,0 +1,25 @@
+name: Despliegue del Sistema de Inventario
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar artefacto liberado
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: ${{ github.repository }}
+          tag: v1.0.0
+          fileName: sistema-inventario-v1.0.0.zip
+
+      - name: Preparar directorio
+        run: |
+          mkdir -p despliegue
+          unzip sistema-inventario-v1.0.0.zip -d despliegue
+
+      - name: Verificar archivos
+        run: |
+          ls -R despliegue
