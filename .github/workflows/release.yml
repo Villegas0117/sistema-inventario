@@ -21,12 +21,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements.txt
+
       - name: Ejecutar pruebas
         run: python -m unittest discover -s tests -t . -v
 
       - name: Crear paquete
         run: |
-          zip -r sistema-inventario-${GITHUB_REF_NAME}.zip src/
+          zip -r sistema-inventario-${GITHUB_REF_NAME}.zip src/ templates/ static/ app.py requirements.txt -x '*/__pycache__/*' '*.pyc'
 
       - name: Publicar version
         uses: softprops/action-gh-release@v2

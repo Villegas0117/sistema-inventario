@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema de inventario | Demostración</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <span class="badge">PROYECTO DEMOSTRATIVO</span>
+      <h1>Sistema de inventario</h1>
+      <p>Registra y consulta productos de manera sencilla.</p>
+    </header>
+    <aside class="notice">Sin base de datos: los productos que agregues se guardan solo en este navegador. Pueden desaparecer si borras los datos del navegador y no se comparten entre dispositivos.</aside>
+    <section class="card">
+      <h2>Producto de ejemplo</h2>
+      <p>Datos generados desde la clase <code>Producto</code> del repositorio.</p>
+      <dl class="example">
+        <div><dt>Código</dt><dd>{{ ejemplo.codigo }}</dd></div>
+        <div><dt>Nombre</dt><dd>{{ ejemplo.nombre }}</dd></div>
+        <div><dt>Precio</dt><dd>${{ ejemplo.precio }}</dd></div>
+        <div><dt>Existencia</dt><dd>{{ ejemplo.existencia }}</dd></div>
+      </dl>
+    </section>
+    <section class="card">
+      <h2>Agregar producto</h2>
+      <form id="producto-form">
+        <label>Código<input name="codigo" required maxlength="40" placeholder="P002"></label>
+        <label>Nombre<input name="nombre" required maxlength="100" placeholder="Mouse"></label>
+        <label>Precio<input name="precio" type="number" required min="0" max="1000000000" step="0.01" placeholder="180.00"></label>
+        <label>Existencia<input name="existencia" type="number" required min="0" max="1000000" step="1" placeholder="5"></label>
+        <button type="submit">Agregar producto</button>
+      </form>
+      <p id="mensaje" role="status" aria-live="polite"></p>
+    </section>
+    <section class="card">
+      <h2>Productos de este navegador</h2>
+      <label>Buscar por código o nombre<input id="buscar" type="search" placeholder="Buscar producto"></label>
+      <div class="table-wrap">
+        <table><thead><tr><th>Código</th><th>Nombre</th><th>Precio</th><th>Existencia</th><th>Acción</th></tr></thead><tbody id="productos"></tbody></table>
+      </div>
+      <p id="vacio">Todavía no hay productos registrados.</p>
+    </section>
+  </main>
+</body>
+</html>
